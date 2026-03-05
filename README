@@ -1,0 +1,100 @@
+# Future Sustainable Logistic Network — CQM Case
+
+Real-world logistics optimization case commissioned by CQM. Built as part of the **Advanced Algorithms** course at Maastricht University (EBC 2107).
+
+---
+
+## Overview
+
+This project tackles a real-world network optimization problem for **Greenforwarder**, a logistics company looking to radically revise their global shipping network. Working in a team of three, we designed an algorithm that builds the optimal network of city connections and transport modalities, balancing three competing KPIs:
+
+| KPI | Description |
+|---|---|
+| Profit | Total Revenue - Total Investment |
+| Emissions | Weighted sum of emissions per modality used |
+| Reach | Number of world regions connected (out of 10) |
+
+The overall objective: **maximize** `Score = wP * Profit - wE * Emissions + wR * Reach`
+
+---
+
+## The Algorithm
+
+We based our approach on **Prim's algorithm** for finding a Minimum Spanning Tree, which we adapted into a multi-objective greedy heuristic. Starting from Eindhoven (Greenforwarder's HQ), the algorithm iteratively expands the network by selecting the highest-scoring edge-modality combination from the current neighbour set.
+
+### Key Adaptations
+
+- **TargetBonus** — Incentivises the algorithm to connect cities that are part of profitable cargo targets, increasing long-term profit potential
+- **ProfitBooster** — A scaling factor on the profit component of the edge score to enforce a minimum profit constraint
+- **Plane Threshold** — Forces early use of high-emission modalities on short connections, reserving low-emission options (ship, train) for longer, costlier routes
+
+---
+
+## Transport Modalities
+
+| Modality | Emissions |
+|---|---|
+| Ship | 1 |
+| Train | 3 |
+| Truck | 8 |
+| Airplane | 25 |
+
+---
+
+## Results
+
+We solved three scenarios, each with different objective weights and constraints:
+
+### POC — Proof of Concept
+Weights: wE = 1, wR = 100
+
+| Metric | Result |
+|---|---|
+| Score | 635 |
+| Profit | -10 |
+| Emissions | 265 |
+| Reach | 9/10 |
+
+### MVP — Minimum Viable Product
+Weights: wP = 15, wE = 1, wR = 100
+
+| Metric | Result |
+|---|---|
+| Score | 713 |
+| Profit | 20 |
+| Emissions | 387 |
+| Reach | 8/10 |
+
+### Live — Production Scenario
+Weights: wP = 15, wE = 1, wR = 100 — with profit >= 45 constraint
+
+| Metric | Result |
+|---|---|
+| Score | 619 |
+| Profit | 47 |
+| Emissions | 886 |
+| Reach | 8/10 |
+
+---
+
+## Sensitivity Analysis
+
+We ran a sensitivity analysis across our three main tunable parameters:
+
+| Parameter | Optimal Value | Network Score |
+|---|---|---|
+| ProfitBooster | 2.0 | 619 |
+| TargetBonus | 2.2 | 619 |
+| Plane Threshold | 0 | 619 |
+
+---
+
+## Tech Stack
+
+- **Language:** Python
+- **Algorithm:** Custom Prim's-inspired greedy heuristic
+- **Case Partner:** CQM (Consultants in Quantitative Methods)
+
+---
+
+*Maastricht University — School of Business and Economics, April 2025*
