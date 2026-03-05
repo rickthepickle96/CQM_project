@@ -1,0 +1,4 @@
+Weg;50
+Spoor;50
+Lucht;50
+Water;50
